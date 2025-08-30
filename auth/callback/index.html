@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Email Confirmation - ArtisanConnect</title>
+    <title>Email Confirmation - Artisan Connect</title>
     <style>
       * {
         margin: 0;
@@ -74,10 +74,19 @@
         text-decoration: none;
         font-weight: 600;
         transition: background 0.3s;
+        margin: 8px;
       }
 
       .btn:hover {
         background: #45a049;
+      }
+
+      .btn-secondary {
+        background: #6c757d;
+      }
+
+      .btn-secondary:hover {
+        background: #5a6268;
       }
 
       .loading {
@@ -122,7 +131,7 @@
 
       <div id="loading" class="loading">
         <div class="spinner"></div>
-        <span>Confirming your email...</span>
+        <span>Processing your request...</span>
       </div>
 
       <div id="success" style="display: none">
@@ -135,58 +144,106 @@
       </div>
 
       <div id="error" style="display: none">
-        <h1 class="error">❌ Confirmation Failed</h1>
+        <h1 class="error">❌ Link Expired</h1>
         <p id="error-message">
-          There was an issue confirming your email. Please try signing up again
-          or contact support.
+          This confirmation link has expired or is invalid. Please request a new
+          confirmation email.
         </p>
-        <a href="#" class="btn" onclick="openApp()">Back to App</a>
+        <a href="#" class="btn" onclick="openApp()">Open App to Resend</a>
+        <a href="#" class="btn btn-secondary" onclick="contactSupport()"
+          >Contact Support</a
+        >
+      </div>
+
+      <div id="password-reset" style="display: none">
+        <h1 class="success">🔑 Ready to Reset Password</h1>
+        <p>
+          Your password reset link is valid. Open the ArtisanConnect app to set
+          your new password.
+        </p>
+        <a href="#" class="btn" onclick="openApp()">Open App</a>
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      // Initialize Supabase (replace with your actual values)
-      const supabaseUrl = "'https://byquypsmoanvnjnavgmo.supabase.co'";
-      const supabaseKey = "process.env.SUPABASE_KEY";
-      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+      function getUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const hashParams = new URLSearchParams(
+          window.location.hash.substring(1)
+        );
 
-      async function handleAuthCallback() {
+        // Combine URL params and hash params
+        const params = {};
+        for (const [key, value] of urlParams.entries()) {
+          params[key] = value;
+        }
+        for (const [key, value] of hashParams.entries()) {
+          params[key] = value;
+        }
+
+        return params;
+      }
+
+      function handleAuthCallback() {
         try {
-          const urlParams = new URLSearchParams(window.location.search);
-          const accessToken = urlParams.get("access_token");
-          const refreshToken = urlParams.get("refresh_token");
-          const type = urlParams.get("type");
+          const params = getUrlParams();
 
-          if (type === "signup" && accessToken) {
-            // Set the session
-            await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            });
+          // Check for errors first
+          if (params.error) {
+            let errorMessage = "An error occurred during confirmation.";
 
-            showSuccess();
+            switch (params.error_code) {
+              case "otp_expired":
+                errorMessage =
+                  "This confirmation link has expired. Please request a new one from the app.";
+                break;
+              case "access_denied":
+                errorMessage =
+                  "Access denied. The confirmation link may be invalid or expired.";
+                break;
+              default:
+                errorMessage = params.error_description || errorMessage;
+            }
+
+            showError(errorMessage);
+            return;
+          }
+
+          // Handle different types
+          const type = params.type;
+
+          if (type === "signup" || type === "email_change") {
+            if (params.access_token) {
+              showSuccess();
+            } else {
+              showError("Invalid confirmation link. Please try again.");
+            }
           } else if (type === "recovery") {
-            // Password recovery
-            showSuccess(
-              "Password reset successful! You can now log in with your new password."
-            );
+            showPasswordReset();
           } else {
-            throw new Error("Invalid confirmation link");
+            // No specific type, check if we have tokens
+            if (params.access_token) {
+              showSuccess();
+            } else {
+              showError(
+                "Invalid or expired link. Please request a new confirmation email."
+              );
+            }
           }
         } catch (error) {
           console.error("Auth callback error:", error);
-          showError(error.message || "Failed to confirm email");
+          showError("Failed to process confirmation link.");
         }
       }
 
-      function showSuccess(customMessage) {
+      function showSuccess() {
         document.getElementById("loading").style.display = "none";
         document.getElementById("success").style.display = "block";
+      }
 
-        if (customMessage) {
-          document.querySelector("#success p").textContent = customMessage;
-        }
+      function showPasswordReset() {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("password-reset").style.display = "block";
       }
 
       function showError(message) {
@@ -197,15 +254,22 @@
 
       function openApp() {
         // Try to open the mobile app first
-        window.location.href = "artisanconnect://auth/success";
+        window.location.href = "artisanconnect://auth/callback";
 
-        // Fallback to app store or preview after a delay
+        // Fallback to preview URL after delay
         setTimeout(() => {
           window.open(
             "https://preview.builtwithrocket.new/artisanconnect-eojvj67",
             "_blank"
           );
-        }, 1000);
+        }, 1500);
+      }
+
+      function contactSupport() {
+        window.open(
+          "mailto:support@artisanconnect.ng?subject=Email Confirmation Issue",
+          "_blank"
+        );
       }
 
       // Run when page loads
