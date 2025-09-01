@@ -1,0 +1,8 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.artisanconnect.app", 
+      "sha256_cert_fingerprints": ["9C:EE:85:56:B3:53:2F:BA:76:81:D5:8E:CB:25:E9:1F:F2:3A:DC:91:78:BB:0F:76:2F:E1:8C:48:13:4C:49:9B"]
+    }
+  }]
