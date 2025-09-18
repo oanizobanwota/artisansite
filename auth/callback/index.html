@@ -95,7 +95,7 @@
       const show = (id, on = true) =>
         ($(id).style.display = on ? "block" : "none");
 
-      // 1) If Supabase sent an error in the URL, show it immediately
+      // If Supabase sent an error in the URL, show it immediately
       const url = new URL(window.location.href);
       const qp = url.searchParams;
       const err = qp.get("error_description") || qp.get("error");
@@ -104,44 +104,41 @@
         show("loading", false);
         show("error", true);
       } else {
-        // 2) Try to create a web session (optional)
+        // Try to create a web session; regardless, show success so users don't get stuck
         confirmWithSupabase().finally(() => {
-          // Regardless of success/failure, show success (verification already happened server-side)
           show("loading", false);
           show("success", true);
         });
       }
 
       async function confirmWithSupabase() {
-        // Timeout safeguard so we never spin forever
+        // Guard against hanging forever
         const timeout = new Promise((_, reject) =>
           setTimeout(() => reject(new Error("timeout")), 2000)
         );
 
         try {
-          // Fill these EXACTLY with your project values
-          const SUPABASE_URL = "https://<your-project-ref>.supabase.co";
-          const SUPABASE_ANON_KEY = "<your-anon-key>";
+          // YOUR Supabase project
+          const SUPABASE_URL = "https://byquypsmoanvnjnavgmo.supabase.co";
+          const SUPABASE_ANON_KEY =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5cXV5cHNtb2Fudm5qbmF2Z21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzMzMxNjcsImV4cCI6MjA3MTkwOTE2N30.wilEFrkbH2KF991xC4ycsFCxKKcyRbRvwcifly8q0hQ";
 
-          // If you haven’t set them yet, bail quickly and let UI show success
-          if (SUPABASE_URL.includes("<") || SUPABASE_ANON_KEY.includes("<"))
-            return;
+          // If anon key not set yet, skip quietly and just show success
+          if (SUPABASE_ANON_KEY.includes("PASTE_YOUR_")) return;
 
           const { createClient } = await import(
             "https://esm.sh/@supabase/supabase-js@2"
           );
-
           const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-          // race with timeout so we never hang
+          // Only helpful for web sessions; not required for “verification only”
           await Promise.race([
             supabase.auth.exchangeCodeForSession(window.location.href),
             timeout,
           ]);
         } catch (e) {
-          // Log to console for debugging, but don't block the user
           console.warn(
-            "Supabase web session not created (okay for mobile-only):",
+            "Supabase web session not created (ok for mobile-only):",
             e?.message || e
           );
         }
