@@ -2,171 +2,150 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Email Confirmation - ArtisanConnect</title>
     <style>
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-          sans-serif;
-        background: linear-gradient(135deg, #4caf50, #66bb6a);
+          Arial, sans-serif;
+        background: #4caf50;
         min-height: 100vh;
+        margin: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #333;
       }
-      .container {
+      .card {
         background: #fff;
         border-radius: 16px;
-        padding: 40px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        width: min(560px, 92%);
+        padding: 32px;
         text-align: center;
-        max-width: 520px;
-        width: 92%;
       }
       .logo {
-        width: 80px;
-        height: 80px;
-        background: #4caf50;
+        width: 64px;
+        height: 64px;
         border-radius: 50%;
-        margin: 0 auto 20px;
+        margin: 0 auto 16px;
+        background: #4caf50;
+        color: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 32px;
-        color: #fff;
         font-weight: 700;
       }
-      .success {
-        color: #4caf50;
-      }
-      .error {
-        color: #f44336;
-      }
-      h1 {
-        margin-bottom: 16px;
-        font-size: 28px;
-      }
-      p {
-        font-size: 16px;
-        line-height: 1.6;
-        margin-bottom: 24px;
+      .muted {
+        opacity: 0.75;
       }
       .btn {
         display: inline-block;
         background: #4caf50;
         color: #fff;
-        padding: 12px 32px;
-        border-radius: 8px;
         text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 8px;
         font-weight: 600;
-        transition: background 0.3s;
-        margin: 8px;
       }
-      .btn:hover {
-        background: #3f9b45;
-      }
-      .loading {
+      .row {
         display: flex;
+        gap: 10px;
         align-items: center;
         justify-content: center;
-        gap: 10px;
       }
       .spinner {
-        width: 20px;
-        height: 20px;
-        border: 2px solid #f3f3f3;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #eee;
         border-top: 2px solid #4caf50;
         border-radius: 50%;
         animation: spin 1s linear infinite;
       }
       @keyframes spin {
-        0% {
-          transform: rotate(0);
-        }
-        100% {
+        to {
           transform: rotate(360deg);
         }
-      }
-      .muted {
-        opacity: 0.75;
       }
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="card">
       <div class="logo">AC</div>
 
-      <div id="loading" class="loading">
+      <div id="loading" class="row">
         <div class="spinner"></div>
-        <span>Confirming your email…</span>
+        <div>Confirming your email…</div>
       </div>
 
       <div id="success" style="display: none">
-        <h1 class="success">✅ Email Confirmed!</h1>
-        <p>Your account is now verified.</p>
-        <!-- For now: send people to your app's login page -->
-        <a href="/login" class="btn" id="continueBtn">Continue to Sign In</a>
-        <p class="muted">You can open the mobile app and sign in now.</p>
+        <h2>✅ Email confirmed!</h2>
+        <p class="muted">You can sign in to ArtisanConnect now.</p>
+        <a class="btn" href="/login">Continue to sign in</a>
       </div>
 
       <div id="error" style="display: none">
-        <h1 class="error">❌ Confirmation Failed</h1>
-        <p id="error-message">
-          Link expired or invalid. Please request a new email.
-        </p>
-        <a href="/" class="btn">Back to Home</a>
+        <h2>❌ Confirmation failed</h2>
+        <p id="errText" class="muted">Link invalid or expired.</p>
+        <a class="btn" href="/">Back to Home</a>
       </div>
     </div>
 
-    <!-- Optional: create a web session if you're also using the site -->
     <script type="module">
-      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-      // Fill these from your Supabase project
-      const SUPABASE_URL = "https://<your-project-ref>.supabase.co";
-      const SUPABASE_ANON_KEY = "<your-anon-key>"; // safe to expose in the browser
-      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
       const $ = (id) => document.getElementById(id);
       const show = (id, on = true) =>
         ($(id).style.display = on ? "block" : "none");
 
-      async function run() {
-        try {
-          const url = window.location.href;
-          const u = new URL(url);
-          const qp = u.searchParams;
-
-          // If Supabase redirected with an error, show it.
-          const err = qp.get("error_description") || qp.get("error");
-          if (err) {
-            show("loading", false);
-            $("error-message").textContent = err;
-            show("error", true);
-            return;
-          }
-
-          // Try to exchange the code for a web session (nice-to-have).
-          // Even if this throws (e.g., already used), the user is still confirmed server-side.
-          try {
-            await supabase.auth.exchangeCodeForSession(url);
-          } catch (e) {
-            console.warn("exchangeCodeForSession:", e?.message || e);
-          }
-
+      // 1) If Supabase sent an error in the URL, show it immediately
+      const url = new URL(window.location.href);
+      const qp = url.searchParams;
+      const err = qp.get("error_description") || qp.get("error");
+      if (err) {
+        $("errText").textContent = err;
+        show("loading", false);
+        show("error", true);
+      } else {
+        // 2) Try to create a web session (optional)
+        confirmWithSupabase().finally(() => {
+          // Regardless of success/failure, show success (verification already happened server-side)
           show("loading", false);
           show("success", true);
-        } catch (e) {
-          console.error(e);
-          show("loading", false);
-          $("error-message").textContent =
-            "Something went wrong. Please try again.";
-          show("error", true);
-        }
+        });
       }
 
-      run();
+      async function confirmWithSupabase() {
+        // Timeout safeguard so we never spin forever
+        const timeout = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("timeout")), 2000)
+        );
+
+        try {
+          // Fill these EXACTLY with your project values
+          const SUPABASE_URL = "https://<your-project-ref>.supabase.co";
+          const SUPABASE_ANON_KEY = "<your-anon-key>";
+
+          // If you haven’t set them yet, bail quickly and let UI show success
+          if (SUPABASE_URL.includes("<") || SUPABASE_ANON_KEY.includes("<"))
+            return;
+
+          const { createClient } = await import(
+            "https://esm.sh/@supabase/supabase-js@2"
+          );
+
+          const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+          // race with timeout so we never hang
+          await Promise.race([
+            supabase.auth.exchangeCodeForSession(window.location.href),
+            timeout,
+          ]);
+        } catch (e) {
+          // Log to console for debugging, but don't block the user
+          console.warn(
+            "Supabase web session not created (okay for mobile-only):",
+            e?.message || e
+          );
+        }
+      }
     </script>
   </body>
 </html>
