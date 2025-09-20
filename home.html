@@ -26,19 +26,7 @@
       content="https://artisanconnect.ng/static/og-cover.png"
     />
 
-    <!-- JSON-LD: Organization + Website -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "ArtisanConnect",
-        "url": "https://artisanconnect.ng",
-        "logo": "https://artisanconnect.ng/static/logo.png",
-        "sameAs": []
-      }
-    </script>
-
-    <!-- Fonts (optional, safe to remove if you self-host) -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
@@ -51,14 +39,11 @@
         --brand-2: #66bb6a;
         --ink: #1f2937;
         --muted: #6b7280;
-        --bg: #0b0f0c;
-        --card: #ffffff;
         --surface: #f8faf9;
         --ring: rgba(76, 175, 80, 0.25);
         --radius: 14px;
         --max: 1200px;
       }
-
       * {
         box-sizing: border-box;
       }
@@ -72,11 +57,7 @@
           Helvetica, Arial, sans-serif;
         color: var(--ink);
         background: var(--surface);
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
       }
-
-      /* ---------- Layout ---------- */
       .container {
         max-width: var(--max);
         margin: 0 auto;
@@ -118,7 +99,6 @@
         font-weight: 800;
         letter-spacing: 0.3px;
       }
-
       .nav-links {
         display: flex;
         gap: 18px;
@@ -157,8 +137,6 @@
         color: #fff;
         box-shadow: 0 10px 22px var(--ring);
       }
-
-      /* Mobile nav */
       .menu-btn {
         display: none;
       }
@@ -203,8 +181,6 @@
           width: 100%;
         }
       }
-
-      /* ---------- Hero ---------- */
       .hero {
         position: relative;
         overflow: hidden;
@@ -293,14 +269,11 @@
         font-size: 13px;
         margin-top: 4px;
       }
-
       @media (max-width: 920px) {
         .stats {
           grid-template-columns: repeat(2, 1fr);
         }
       }
-
-      /* ---------- Sections ---------- */
       section {
         padding: 56px 0;
       }
@@ -318,8 +291,6 @@
       .muted {
         color: var(--muted);
       }
-
-      /* Cards */
       .grid {
         display: grid;
         gap: 16px;
@@ -344,7 +315,6 @@
           grid-template-columns: 1fr;
         }
       }
-
       .card {
         background: #fff;
         border: 1px solid rgba(0, 0, 0, 0.06);
@@ -370,7 +340,6 @@
         border-radius: 999px;
         background: #f1f5f3;
       }
-
       .category-card {
         display: flex;
         gap: 12px;
@@ -388,7 +357,6 @@
         box-shadow: 0 8px 18px var(--ring);
         flex: 0 0 38px;
       }
-
       .artisan-cover {
         aspect-ratio: 16/10;
         background: linear-gradient(135deg, #d9fadd, #e8fceb);
@@ -414,8 +382,6 @@
       .stars {
         color: #f59e0b;
       }
-
-      /* How it works */
       .steps {
         display: grid;
         gap: 16px;
@@ -443,8 +409,6 @@
           grid-template-columns: 1fr;
         }
       }
-
-      /* Testimonials */
       .quote {
         font-size: 15px;
         line-height: 1.6;
@@ -458,8 +422,6 @@
         width: 44px;
         height: 44px;
       }
-
-      /* CTA Strip */
       .cta {
         border-radius: 18px;
         padding: 28px;
@@ -473,8 +435,6 @@
             center/cover no-repeat;
         border: 1px solid rgba(76, 175, 80, 0.25);
       }
-
-      /* Footer */
       footer {
         padding: 32px 0;
         background: #0a0f0b;
@@ -507,18 +467,16 @@
     <!-- Header / Nav -->
     <header>
       <div class="container nav">
-        <a class="brand" href="/">
-          <div class="logo">AC</div>
-          <span>ArtisanConnect</span>
-        </a>
-
+        <a class="brand" href="/"
+          ><div class="logo">AC</div>
+          <span>ArtisanConnect</span></a
+        >
         <nav class="nav-links" aria-label="Primary">
           <a href="#categories">Categories</a>
           <a href="#featured">Featured</a>
           <a href="#how">How it works</a>
           <a href="#faq">FAQ</a>
         </nav>
-
         <div class="nav-cta">
           <a class="btn btn-outline" href="https://artisanconnect.ng/login"
             >Log in</a
@@ -596,7 +554,12 @@
           Compare profiles, read reviews, and book with confidence.
         </p>
 
-        <form class="search" action="/service-search" method="get">
+        <!-- 🔌 Search wired to /service-search-and-discovery -->
+        <form
+          class="search"
+          action="/service-search-and-discovery"
+          method="get"
+        >
           <input
             aria-label="What service do you need?"
             type="search"
@@ -605,12 +568,12 @@
           />
           <select aria-label="Choose category" name="category">
             <option value="">All categories</option>
-            <option>Tailoring & Fashion</option>
-            <option>Carpentry & Woodwork</option>
-            <option>Electrical Services</option>
-            <option>Plumbing</option>
-            <option>Hair & Beauty</option>
-            <option>Appliance Repair</option>
+            <option value="tailoring">Tailoring & Fashion</option>
+            <option value="carpentry">Carpentry & Woodwork</option>
+            <option value="electrical">Electrical Services</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="beauty">Hair & Beauty</option>
+            <option value="appliance">Appliance Repair</option>
           </select>
           <input
             aria-label="Your city"
@@ -621,10 +584,10 @@
         </form>
 
         <div class="badge-row" aria-label="Popular searches">
-          <span class="badge">• Tailoring</span>
-          <span class="badge">• Carpentry</span>
-          <span class="badge">• Electrical</span>
-          <span class="badge">• Beauty</span>
+          <span class="badge">• Tailoring</span
+          ><span class="badge">• Carpentry</span
+          ><span class="badge">• Electrical</span
+          ><span class="badge">• Beauty</span>
         </div>
 
         <div class="stats">
@@ -657,57 +620,58 @@
         </div>
 
         <div class="grid cols-4">
-          <a class="card category-card" href="/search?category=tailoring">
-            <div class="cat-icon">✂️</div>
+          <a
+            class="card category-card"
+            href="/service-search-and-discovery?category=tailoring"
+            ><div class="cat-icon">✂️</div>
             <div>
               <strong>Tailoring & Fashion</strong>
               <div class="muted">Custom fits & repairs</div>
-            </div>
-          </a>
-
-          <a class="card category-card" href="/search?category=carpentry">
-            <div class="cat-icon">🪚</div>
+            </div></a
+          >
+          <a
+            class="card category-card"
+            href="/service-search-and-discovery?category=carpentry"
+            ><div class="cat-icon">🪚</div>
             <div>
               <strong>Carpentry</strong>
               <div class="muted">Furniture, fittings</div>
-            </div>
-          </a>
-
-          <a class="card category-card" href="/search?category=electric">
-            <div class="cat-icon">💡</div>
+            </div></a
+          >
+          <a
+            class="card category-card"
+            href="/service-search-and-discovery?category=electric"
+            ><div class="cat-icon">💡</div>
             <div>
               <strong>Electrical</strong>
               <div class="muted">Repairs & installs</div>
-            </div>
-          </a>
-
-          <a class="card category-card" href="/search?category=plumbing">
-            <div class="cat-icon">🔧</div>
+            </div></a
+          >
+          <a
+            class="card category-card"
+            href="/service-search-and-discovery?category=plumbing"
+            ><div class="cat-icon">🔧</div>
             <div>
               <strong>Plumbing</strong>
               <div class="muted">Leaks & fixtures</div>
-            </div>
-          </a>
+            </div></a
+          >
         </div>
       </div>
     </section>
 
-    <!-- Featured artisans -->
+    <!-- Featured artisans (will be replaced by Supabase data) -->
     <section id="featured">
       <div class="container">
         <div class="section-head">
           <h2 class="section-title">Featured Artisans</h2>
-          <a class="muted" href="/search">See more →</a>
+          <a class="muted" href="/service-search-and-discovery">See more →</a>
         </div>
 
-        <div class="grid cols-3">
-          <!-- Card 1 -->
+        <div id="featured-grid" class="grid cols-3">
+          <!-- Fallback content (auto-replaced if Supabase loads) -->
           <article class="card">
-            <div
-              class="artisan-cover"
-              role="img"
-              aria-label="Tailoring studio cover image"
-            ></div>
+            <div class="artisan-cover"></div>
             <div class="card-body">
               <div class="artisan-head">
                 <div class="avatar"></div>
@@ -739,14 +703,8 @@
               </div>
             </div>
           </article>
-
-          <!-- Card 2 -->
           <article class="card">
-            <div
-              class="artisan-cover"
-              role="img"
-              aria-label="Wood workshop cover image"
-            ></div>
+            <div class="artisan-cover"></div>
             <div class="card-body">
               <div class="artisan-head">
                 <div class="avatar"></div>
@@ -778,14 +736,8 @@
               </div>
             </div>
           </article>
-
-          <!-- Card 3 -->
           <article class="card">
-            <div
-              class="artisan-cover"
-              role="img"
-              aria-label="Electrical tools cover image"
-            ></div>
+            <div class="artisan-cover"></div>
             <div class="card-body">
               <div class="artisan-head">
                 <div class="avatar"></div>
@@ -890,6 +842,62 @@
       </div>
     </section>
 
+    <!-- Newsletter (Netlify/Cloudflare Pages Forms) -->
+    <section id="newsletter">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">Get product updates</h2>
+          <span class="muted"
+            >News, features, and rollout notes — no spam.</span
+          >
+        </div>
+
+        <!-- Netlify: data-netlify + hidden form-name + honeypot -->
+        <!-- Cloudflare Pages: name + method="POST" is enough; works with this markup too -->
+        <form
+          name="newsletter"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          class="search"
+          id="newsletter-form"
+        >
+          <input type="hidden" name="form-name" value="newsletter" />
+          <p style="display: none">
+            <label>Don’t fill this out: <input name="bot-field" /></label>
+          </p>
+          <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            aria-label="Email address"
+            required
+          />
+          <input
+            name="first_name"
+            placeholder="First name (optional)"
+            aria-label="First name"
+          />
+          <button class="btn btn-primary" type="submit">Subscribe</button>
+        </form>
+
+        <div
+          id="newsletter-success"
+          class="card"
+          style="display: none; margin-top: 16px; padding: 16px"
+        >
+          Thanks! Please check your inbox to confirm your subscription.
+        </div>
+        <div
+          id="newsletter-error"
+          class="card"
+          style="display: none; margin-top: 16px; padding: 16px; color: #b91c1c"
+        >
+          Something went wrong. Please try again.
+        </div>
+      </div>
+    </section>
+
     <!-- Testimonials -->
     <section>
       <div class="container">
@@ -935,53 +943,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq">
-      <div class="container">
-        <div class="section-head">
-          <h2 class="section-title">Frequently Asked Questions</h2>
-        </div>
-
-        <div class="grid cols-2">
-          <details class="card" open>
-            <summary style="padding: 14px; cursor: pointer; font-weight: 600">
-              Are artisans vetted?
-            </summary>
-            <div class="card-body">
-              Yes. We review IDs, references, and prior work history before
-              approval.
-            </div>
-          </details>
-          <details class="card">
-            <summary style="padding: 14px; cursor: pointer; font-weight: 600">
-              How do payments work?
-            </summary>
-            <div class="card-body">
-              We support secure online payments. Funds are released when the job
-              is completed.
-            </div>
-          </details>
-          <details class="card">
-            <summary style="padding: 14px; cursor: pointer; font-weight: 600">
-              Can I chat with an artisan first?
-            </summary>
-            <div class="card-body">
-              Absolutely. Use in-app chat to align on scope, timing, and
-              pricing.
-            </div>
-          </details>
-          <details class="card">
-            <summary style="padding: 14px; cursor: pointer; font-weight: 600">
-              What if there’s an issue?
-            </summary>
-            <div class="card-body">
-              Our support team can help mediate and find a fair resolution.
-            </div>
-          </details>
         </div>
       </div>
     </section>
@@ -1034,27 +995,24 @@
               </div>
               <span style="font-weight: 800">ArtisanConnect</span>
             </div>
-            <p style="margin: 0" class="muted">
+            <p class="muted" style="margin: 0">
               Connecting people to skilled, trusted artisans across Nigeria.
             </p>
           </div>
           <div>
-            <strong style="display: block; margin-bottom: 10px">Company</strong>
-            <a href="/about">About</a><br />
-            <a href="/careers">Careers</a><br />
-            <a href="/contact">Contact</a>
+            <strong style="display: block; margin-bottom: 10px">Company</strong
+            ><a href="/about">About</a><br /><a href="/careers">Careers</a
+            ><br /><a href="/contact">Contact</a>
           </div>
           <div>
-            <strong style="display: block; margin-bottom: 10px">Support</strong>
-            <a href="/help">Help Center</a><br />
-            <a href="/safety">Safety</a><br />
-            <a href="/payments">Payments</a>
+            <strong style="display: block; margin-bottom: 10px">Support</strong
+            ><a href="/help">Help Center</a><br /><a href="/safety">Safety</a
+            ><br /><a href="/payments">Payments</a>
           </div>
           <div>
-            <strong style="display: block; margin-bottom: 10px">Legal</strong>
-            <a href="/terms">Terms</a><br />
-            <a href="/privacy">Privacy</a><br />
-            <a href="/cookies">Cookies</a>
+            <strong style="display: block; margin-bottom: 10px">Legal</strong
+            ><a href="/terms">Terms</a><br /><a href="/privacy">Privacy</a
+            ><br /><a href="/cookies">Cookies</a>
           </div>
         </div>
         <div class="copy">
@@ -1063,12 +1021,12 @@
       </div>
     </footer>
 
+    <!-- 🔧 Mobile nav + newsletter AJAX -->
     <script>
-      // Mobile sheet
+      // mobile sheet
       const menuBtn = document.getElementById("menuBtn");
       const sheet = document.getElementById("mobileSheet");
       const closeBtn = document.getElementById("closeSheet");
-
       function closeSheet() {
         sheet.classList.remove("open");
         menuBtn?.setAttribute("aria-expanded", "false");
@@ -1084,8 +1042,120 @@
         if (e.target === sheet) closeSheet();
       });
 
-      // Year
+      // year
       document.getElementById("y").textContent = new Date().getFullYear();
+
+      // Newsletter progressive enhancement:
+      // Works with Netlify Forms (data-netlify) and Cloudflare Pages (name + POST).
+      const form = document.getElementById("newsletter-form");
+      const ok = document.getElementById("newsletter-success");
+      const err = document.getElementById("newsletter-error");
+
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        // Ensure Netlify sees the form-name when using fetch
+        if (!data.get("form-name")) data.set("form-name", "newsletter");
+
+        try {
+          await fetch("/", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(data).toString(),
+          });
+          form.reset();
+          ok.style.display = "block";
+          err.style.display = "none";
+        } catch (_e) {
+          ok.style.display = "none";
+          err.style.display = "block";
+        }
+      });
+    </script>
+
+    <!-- 🔌 Supabase: tiny module to hydrate Featured -->
+    <script type="module">
+      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+      // ✅ Your project (public) keys — safe to expose
+      const supabaseUrl = "https://byquypsmoanvnjnavgmo.supabase.co";
+      const supabaseAnonKey = "YOUR_SUPABASE_ANON_KEY"; // ← paste your anon public key
+
+      const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+      function naira(n) {
+        if (n == null || isNaN(n)) return "₦0";
+        const v = Math.round(Number(n));
+        return "₦" + v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      async function loadFeatured() {
+        try {
+          const { data, error } = await supabase
+            .from("services")
+            .select("id, title, price_min, price_max, images, location")
+            .eq("status", "active")
+            .order("created_at", { ascending: false })
+            .limit(3);
+
+          if (error) throw error;
+          if (!data || !data.length) return;
+
+          const grid = document.getElementById("featured-grid");
+          const html = data
+            .map((s) => {
+              const img =
+                Array.isArray(s.images) && s.images.length
+                  ? s.images[0]
+                  : "https://images.unsplash.com/photo-1541976076758-347942db1970?q=80&w=1200&auto=format&fit=crop";
+
+              const price =
+                s.price_min && s.price_max
+                  ? `${naira(s.price_min)} – ${naira(s.price_max)}`
+                  : s.price_min
+                  ? `From ${naira(s.price_min)}`
+                  : "Contact for price";
+
+              const loc = s.location || "Nigeria";
+
+              return `
+            <article class="card">
+              <div class="artisan-cover" style="background:url('${img}') center/cover no-repeat"></div>
+              <div class="card-body">
+                <div class="artisan-head">
+                  <div class="avatar"></div>
+                  <div>
+                    <strong>${
+                      s.title?.replace(/</g, "&lt;") ?? "Service"
+                    }</strong>
+                    <div class="muted">${loc}</div>
+                  </div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+                  <div class="rating"><span class="stars">★★★★★</span> 4.8</div>
+                  <span class="pill">${price}</span>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <a class="btn btn-outline" href="/artisan-profile-detail?id=${encodeURIComponent(
+                    s.id
+                  )}">View profile</a>
+                  <a class="btn btn-primary" href="/service-booking-flow?service=${encodeURIComponent(
+                    s.id
+                  )}">Book</a>
+                </div>
+              </div>
+            </article>
+          `;
+            })
+            .join("");
+
+          grid.innerHTML = html;
+        } catch (e) {
+          console.error("Featured load error:", e);
+        }
+      }
+
+      loadFeatured();
     </script>
   </body>
 </html>
